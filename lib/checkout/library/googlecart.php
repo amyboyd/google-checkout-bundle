@@ -1026,10 +1026,12 @@
      * more info:
      * {@link http://code.google.com/apis/checkout/developer/index.html#alternate_technique}
      * 
+     * @param bool $die whether to die() or not after performing the request,
+     *                  defaults to true
      * @return array with the returned http status code (200 if OK) in index 0 
      *               and the redirect url returned by the server in index 1
      */
-    function CheckoutServer2Server($proxy=array(), $certPath='') {
+    function CheckoutServer2Server($proxy=array(), $certPath='', $die = true) {
       require_once(dirname(__FILE__).'/googlerequest.php');
       $GRequest = new GoogleRequest($this->merchant_id, 
                       $this->merchant_key, 
@@ -1038,8 +1040,8 @@
                       $this->currency);
       $GRequest->SetProxy($proxy);
       $GRequest->SetCertificatePath($certPath);
-                      
-      return $GRequest->SendServer2ServerCart($this->GetXML());
+
+      return $GRequest->SendServer2ServerCart($this->GetXML(), $die);
     }
 
     /**
