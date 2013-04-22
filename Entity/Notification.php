@@ -32,6 +32,7 @@ class Notification
     private $serial;
 
     /**
+     * See https://developers.google.com/checkout/developer/Google_Checkout_XML_API_Notification_API
      * @ORM\Column(name="xml", type="text")
      */
     private $xml;
@@ -40,6 +41,28 @@ class Notification
      * @ORM\Column(name="date", type="datetime")
      */
     private $date;
+
+    /**
+     * @ORM\Column(name="type", type="integer")
+     */
+    private $type;
+
+    // A <new-order-notification>
+    const TYPE_NEW_ORDER = 1;
+    // A <order-state-change-notification>
+    const TYPE_ORDER_STATE_CHANGE = 2;
+    // A <risk-information-notification>
+    const TYPE_RISK_INFORMATION = 3;
+    // A <authorization-amount-notification> - the charge amount has been auth'ed.
+    const TYPE_AUTHORIZATION_AMOUNT = 4;
+    // A <charge-amount-notification> - the order has actually been charged.
+    const TYPE_CHARGE_AMOUNT = 5;
+    // A <refund-amount-notification>
+    const TYPE_REFUND_AMOUNT = 6;
+    // A <chargeback-amount-notification>
+    const TYPE_CHARGEBACK_AMOUNT = 7;
+    // A <cancelled-subscription-notification>
+    const TYPE_CANCELLED_SUBSCRIPTION = 8;
 
     public function __construct()
     {
@@ -66,6 +89,11 @@ class Notification
         return $this->xml;
     }
 
+    public function getType()
+    {
+        return $this->type;
+    }
+
     public function getDate()
     {
         return $this->date;
@@ -82,5 +110,10 @@ class Notification
     public function setXml($xml)
     {
         $this->xml = $xml;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }
