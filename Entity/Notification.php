@@ -7,7 +7,7 @@ use DateTime;
 
 /**
  * @ORM\Table(name="google_checkout_notif")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Amy\GoogleCheckoutBundle\Entity\NotificationRepository")
  */
 class Notification
 {
@@ -64,9 +64,41 @@ class Notification
     // A <cancelled-subscription-notification>
     const TYPE_CANCELLED_SUBSCRIPTION = 8;
 
-    public function __construct()
+    public function __construct($xml)
     {
-        $this->date = new DateTime();
+        $this->xml = $xml;
+
+        $xmlElement = $this->getXmlAsSimpleXMLElement();
+        switch ($xmlElement->getName()) {
+            case 'new-order-notification':
+                $this->type = self::TYPE_NEW_ORDER;
+                break;
+            case 'order-state-change-notification':
+                $this->type = self::TYPE_ORDER_STATE_CHANGE;
+                break;
+            case 'risk-information-notification':
+                $this->type = self::TYPE_RISK_INFORMATION;
+                break;
+            case 'authorization-amount-notification':
+                $this->type = self::TYPE_AUTHORIZATION_AMOUNT;
+                break;
+            case 'charge-amount-notification':
+                $this->type = self::TYPE_CHARGE_AMOUNT;
+                break;
+            case 'refund-amount-notification':
+                $this->type = self::TYPE_REFUND_AMOUNT;
+                break;
+            case 'chargeback-amount-notification':
+                $this->type = self::TYPE_CHARGEBACK_AMOUNT;
+                break;
+            case 'cancelled-subscription-notification':
+                $this->type = self::TYPE_CANCELLED_SUBSCRIPTION;
+                break;
+        }
+
+        $this->serial = (string) $xmlElement->attributes()->{'serial-number'};
+        $this->orderNumber = (string)$xmlElement->{'google-order-number'};
+        $this->date = new DateTime((string) $xmlElement->{'timestamp'});
     }
 
     public function getId()
@@ -115,5 +147,21 @@ class Notification
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @var \SimpleXMLElement
+     */
+    private $xmlAsSimpleXMLElement;
+
+    /**
+     * @return \SimpleXMLElement
+     */
+    public function getXmlAsSimpleXMLElement()
+    {
+        if ($this->xmlAsSimpleXMLElement === null) {
+            $this->xmlAsSimpleXMLElement = simplexml_load_string($this->xml);
+        }
+        return $this->xmlAsSimpleXMLElement;
     }
 }

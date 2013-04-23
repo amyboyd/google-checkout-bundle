@@ -1,0 +1,5 @@
+parameters:
+    amy_google_checkout.merchant_id: x
+    amy_google_checkout.merchant_key: x
+    amy_google_checkout.server_type: sandbox
+    amy_google_checkout.ssl_certificate_path: ''

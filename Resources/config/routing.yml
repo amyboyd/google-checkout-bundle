@@ -1,0 +1,3 @@
+amy_google_checkout_ipn:
+    pattern:  /ipn
+    defaults: { _controller: AmyGoogleCheckoutBundle:Default:ipn }

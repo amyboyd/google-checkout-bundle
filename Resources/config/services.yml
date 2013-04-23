@@ -1,0 +1,4 @@
+services:
+    amy_google_checkout:
+        class: Amy\GoogleCheckoutBundle\Service
+        arguments: [@doctrine.orm.entity_manager]
