@@ -29,6 +29,8 @@ class Service
      */
     public function createCart($currency)
     {
+        $this->autoloadGoogleClasses();
+
         return new \GoogleCart(
             $this->merchantID,
             $this->merchantKey,
@@ -87,6 +89,36 @@ class Service
                 call_user_func(array($listener, $method), $notification, $originalNewOrderNotification);
             }
         }
+    }
+
+    /**
+     * @param string $serial
+     * @return string
+     * @throws Exception
+     */
+    public function getXmlBySerialNumber($serial)
+    {
+        $this->autoloadGoogleClasses();
+
+        // Request the notification's XML data.
+        $request = new \GoogleNotificationHistoryRequest(
+            $this->merchantID,
+            $this->merchantKey,
+            $this->serverType
+        );
+        $response = $request->SendNotificationHistoryRequest(
+            $serial,
+            null,
+            array(),
+            array(),
+            null,
+            null,
+            $this->getSslCertificatePath()
+        );
+        if (!is_array($response) || $response[0] != 200) {
+            throw new Exception('Serial ' . $serial . ' has unexpected history response: ' . print_r($response, true));
+        }
+        return $response[1];
     }
 
     public function autoloadGoogleClasses()
