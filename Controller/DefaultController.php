@@ -27,13 +27,10 @@ class DefaultController extends Controller
                 ->getRepository('AmyGoogleCheckoutBundle:Notification')
                 ->findOriginalNewOrderNotification($notification);
         }
-        else {
-            $originalNewOrder = null;
-        }
 
         $this->get('amy_google_checkout')->newNotification(
-            $notification->getXmlAsSimpleXMLElement(),
-            $originalNewOrder ? $originalNewOrder->getXmlAsSimpleXMLElement() : null
+            $notification,
+            isset($originalNewOrder) ? $originalNewOrder : null
         );
 
         // A '200 OK' response needs to be sent.
