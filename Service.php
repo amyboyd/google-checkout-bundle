@@ -17,10 +17,6 @@ class Service
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-
-        // @todo - remove after testing completed.
-        $sampleListener = new Test\SampleListener();
-        $this->registerListener($sampleListener);
     }
 
     /**
