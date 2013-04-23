@@ -10,15 +10,31 @@ class Service
 {
     private $entityManager;
 
+    private $merchantID, $merchantKey, $serverType, $sslCertificatePath;
+
     private $listeners = array();
 
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        
+
         // @todo - remove after testing completed.
         $sampleListener = new Test\SampleListener();
         $this->registerListener($sampleListener);
+    }
+
+    /**
+     * @param string $currency Like "GBP" or "EUR".
+     * @return \GoogleCart
+     */
+    public function createCart($currency)
+    {
+        return new \GoogleCart(
+            $this->merchantID,
+            $this->merchantKey,
+            $this->serverType,
+            $currency
+        );
     }
 
     public function registerListener(NotificationListener $listener)
@@ -73,11 +89,60 @@ class Service
         }
     }
 
+    public function autoloadGoogleClasses()
+    {
+        require_once __DIR__ . '/lib/checkout/library/autoload.php';
+    }
+
     /**
      * @return EntityManager
      */
     public function getEntityManager()
     {
         return $this->entityManager;
+    }
+
+    public function getMerchantID()
+    {
+        return $this->merchantID;
+    }
+
+    public function getMerchantKey()
+    {
+        return $this->merchantKey;
+    }
+
+    public function getServerType()
+    {
+        return $this->serverType;
+    }
+
+    public function getSslCertificatePath()
+    {
+        return $this->sslCertificatePath;
+    }
+
+    public function setMerchantID($merchantID)
+    {
+        $this->merchantID = $merchantID;
+    }
+
+    public function setMerchantKey($merchantKey)
+    {
+        $this->merchantKey = $merchantKey;
+    }
+
+    public function setServerType($serverType)
+    {
+        if ($serverType !== 'sandbox' && $serverType !== 'production') {
+            throw new Exception('Unexpected server type: ' . $serverType
+                . ' (expected sandbox or production)');
+        }
+        $this->serverType = $serverType;
+    }
+
+    public function setSslCertificatePath($sslCertificatePath)
+    {
+        $this->sslCertificatePath = $sslCertificatePath;
     }
 }

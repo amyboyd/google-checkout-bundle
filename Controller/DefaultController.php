@@ -13,8 +13,6 @@ class DefaultController extends Controller
     public function ipnAction(Request $request)
     {
         $serial = $request->get('serial-number');
-
-        $this->autoloadGoogleLibrary();
         $xml = $this->getXmlBySerialNumber($serial);
 
         $notification = new Notification($xml);
@@ -37,19 +35,15 @@ class DefaultController extends Controller
         return new Response(null, 200);
     }
 
-    private function autoloadGoogleLibrary()
-    {
-        // @todo - move to somewhere more appropriate.
-        require_once __DIR__ . '/../lib/checkout/library/autoload.php';
-    }
-
     private function getXmlBySerialNumber($serial)
     {
+        $this->get('amy_google_checkout')->autoloadGoogleClasses();
+
         // Request the notification's XML data.
         $notification = new \GoogleNotificationHistoryRequest(
-            $this->getSetting('merchant_id'),
-            $this->getSetting('merchant_key'),
-            $this->getSetting('server_type')
+            $this->get('amy_google_checkout')->getMerchantID(),
+            $this->get('amy_google_checkout')->getMerchantKey(),
+            $this->get('amy_google_checkout')->getServerType()
         );
         $notificationResponse = $notification->SendNotificationHistoryRequest(
             $serial,
@@ -58,16 +52,11 @@ class DefaultController extends Controller
             array(),
             null,
             null,
-            $this->getSetting('ssl_certificate_path')
+            $this->get('amy_google_checkout')->getSslCertificatePath()
         );
         if (!is_array($notificationResponse) || $notificationResponse[0] != 200) {
             throw new Exception('Serial ' . $serial . ' has unexpected history response: ' . print_r($notificationResponse, true));
         }
         return $notificationResponse[1];
-    }
-
-    private function getSetting($setting)
-    {
-        return $this->container->getParameter('amy_google_checkout.' . $setting);
     }
 }
