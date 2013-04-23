@@ -2,22 +2,14 @@
 
 namespace Amy\GoogleCheckoutBundle;
 
-use Doctrine\ORM\EntityManager;
 use Amy\GoogleCheckoutBundle\Entity\Notification;
 use Amy\GoogleCheckoutBundle\Exception;
 
 class Service
 {
-    private $entityManager;
-
     private $merchantID, $merchantKey, $serverType, $sslCertificatePath;
 
     private $listeners = array();
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
 
     /**
      * @param string $currency Like "GBP" or "EUR".
@@ -120,14 +112,6 @@ class Service
     public function autoloadGoogleClasses()
     {
         require_once __DIR__ . '/lib/checkout/library/autoload.php';
-    }
-
-    /**
-     * @return EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
     }
 
     public function getMerchantID()

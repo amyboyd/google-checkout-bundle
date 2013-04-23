@@ -19,16 +19,16 @@ class DefaultController extends Controller
         $em->persist($notification);
         $em->flush();
 
-        if ($notification->getType() != Notification::TYPE_NEW_ORDER) {
+        if ($notification->getType() == Notification::TYPE_NEW_ORDER) {
+            $originalNewOrder = $notification;
+        }
+        else {
             $originalNewOrder = $this->getDoctrine()
                 ->getRepository('AmyGoogleCheckoutBundle:Notification')
                 ->findOriginalNewOrderNotification($notification);
         }
 
-        $this->get('amy_google_checkout')->newNotification(
-            $notification,
-            isset($originalNewOrder) ? $originalNewOrder : null
-        );
+        $this->get('amy_google_checkout')->newNotification($notification, $originalNewOrder);
 
         // A '200 OK' response needs to be sent.
         return new Response(null, 200);

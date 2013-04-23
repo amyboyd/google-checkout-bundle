@@ -1,7 +1,6 @@
 services:
     amy_google_checkout:
         class: Amy\GoogleCheckoutBundle\Service
-        arguments: [@doctrine.orm.entity_manager]
         calls:
             - [setMerchantID, ["%amy_google_checkout.merchant_id%"]]
             - [setMerchantKey, ["%amy_google_checkout.merchant_key%"]]

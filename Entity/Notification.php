@@ -97,7 +97,7 @@ class Notification
         }
 
         $this->serial = (string) $xmlElement->attributes()->{'serial-number'};
-        $this->orderNumber = (string)$xmlElement->{'google-order-number'};
+        $this->orderNumber = (string) $xmlElement->{'google-order-number'};
         $this->date = new DateTime((string) $xmlElement->{'timestamp'});
     }
 
@@ -123,30 +123,12 @@ class Notification
 
     public function getType()
     {
-        return $this->type;
+        return (int) $this->type;
     }
 
     public function getDate()
     {
         return $this->date;
-    }
-
-    public function setSerial($serial)
-    {
-        $this->serial = $serial;
-
-        $parts = explode('-', $serial, 2);
-        $this->orderNumber = $parts[0];
-    }
-
-    public function setXml($xml)
-    {
-        $this->xml = $xml;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     /**
