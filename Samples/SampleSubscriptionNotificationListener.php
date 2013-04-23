@@ -32,8 +32,6 @@ class SampleSubscriptionNotificationListener extends NotificationListener
         $user = $this->em
             ->getRepository('User')
             ->find((int) $privateData->user);
-        /* @var $user \Oddboys\UserBundle\Entity\User */
-
         $price = $notification->getXmlAsSimpleXMLElement()
             ->{'shopping-cart'}
             ->{'items'}
@@ -53,8 +51,6 @@ class SampleSubscriptionNotificationListener extends NotificationListener
         $user = $this->em
             ->getRepository('User')
             ->find((int) $privateData->user);
-        /* @var $user \Oddboys\UserBundle\Entity\User */
-
         $price = $notification->getXmlAsSimpleXMLElement()
             ->{'latest-charge-amount'};
         $user->setHasActiveSubscription(true);
@@ -72,8 +68,6 @@ class SampleSubscriptionNotificationListener extends NotificationListener
         $user = $this->em
             ->getRepository('User')
             ->find((int) $privateData->user);
-        /* @var $user \Oddboys\UserBundle\Entity\User */
-
         $user->setHasActiveSubscription(false);
         $user->setBillingAmount(null);
         $this->em->persist($user);
@@ -91,8 +85,6 @@ class SampleSubscriptionNotificationListener extends NotificationListener
             $user = $this->em
                 ->getRepository('User')
                 ->find((int) $privateData->user);
-            /* @var $user \Oddboys\UserBundle\Entity\User */
-
             $user->setHasActiveSubscription(false);
             $user->setBillingAmount(null);
             $this->em->persist($user);

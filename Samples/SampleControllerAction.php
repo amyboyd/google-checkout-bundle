@@ -5,7 +5,7 @@ $this->get('amy_google_checkout')->autoloadGoogleClasses();
 $price = ...;
 $userID = ...;
 
-$item = new \GoogleItem('Subscrption', '', 1, $price);
+$item = new \GoogleItem('Subscription', '', 1, $price);
 $item->SetEmailDigitalDelivery('true');
 $item->SetMerchantItemId('subscription');
 $item->SetMerchantPrivateItemData(json_encode(array(
